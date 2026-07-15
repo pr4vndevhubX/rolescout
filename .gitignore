@@ -1,6 +1,9 @@
 # Environment variables
 .env
 
+# Uploaded resumes — real user PII, must never be committed
+storage/
+
 # Python virtual environment
 venv/
 
