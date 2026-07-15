@@ -9,6 +9,11 @@ def fetch_jobs(query: str, country: str = "in", location: str | None = None, res
     Fetches raw job listings from Adzuna for a given search query.
     country: Adzuna uses country codes like 'gb', 'us', 'in', etc.
     """
+    if not ADZUNA_APP_ID or not ADZUNA_APP_KEY:
+        raise ValueError(
+            "Adzuna keys not configured (ADZUNA_APP_ID / ADZUNA_APP_KEY) — "
+            "source skipped; keyless sources (remotive, arbeitnow) still work."
+        )
     url = f"{BASE_URL}/{country}/search/1"
     params = {
         "app_id": ADZUNA_APP_ID,

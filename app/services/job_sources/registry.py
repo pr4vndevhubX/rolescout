@@ -1,14 +1,17 @@
-"""Source registry — one line per connector. Currently Adzuna only.
+"""Source registry — one line per connector.
 
-The plugin architecture stays: to add a source later, create a connector
-implementing JobSource (see base.py) and register it here.
+The plugin architecture stays: to add a source later (LinkedIn has no public
+API; Jooble/JSearch/Naukri are candidates), create a connector implementing
+JobSource (see base.py) and register it here.
 """
 
 from app.services.job_sources.base import JobSource
 from app.services.job_sources.adzuna_source import AdzunaSource
+from app.services.job_sources.arbeitnow_source import ArbeitnowSource
+from app.services.job_sources.remotive_source import RemotiveSource
 
 _SOURCES: dict[str, JobSource] = {
-    s.name: s for s in (AdzunaSource(),)
+    s.name: s for s in (AdzunaSource(), RemotiveSource(), ArbeitnowSource())
 }
 
 

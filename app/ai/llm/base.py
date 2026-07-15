@@ -18,6 +18,10 @@ class LLMProvider(ABC):
 
     name: str = "base"
 
+    def model_for(self, tier: str) -> str:
+        """Maps a task tier ("fast" | "smart") to this provider's model name."""
+        return "default"
+
     @abstractmethod
     def complete(
         self,
