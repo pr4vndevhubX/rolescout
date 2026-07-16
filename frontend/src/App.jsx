@@ -5,6 +5,8 @@ import AuthPage from "./components/AuthPage";
 import UploadPanel from "./components/UploadPanel";
 import JobsPanel from "./components/JobsPanel";
 import MatchesPanel from "./components/MatchesPanel";
+import PreferencesPanel from "./components/PreferencesPanel";
+import AssistantPanel from "./components/AssistantPanel";
 
 let toastId = 0;
 
@@ -115,9 +117,13 @@ export default function App() {
       <main className="grid gap-5 lg:grid-cols-[400px_1fr]">
         <div className="space-y-5">
           <UploadPanel resume={resume} setResume={setResume} toast={toast} />
+          <PreferencesPanel toast={toast} />
           <JobsPanel toast={toast} />
         </div>
-        <MatchesPanel resume={resume} toast={toast} />
+        <div className="space-y-5">
+          <AssistantPanel toast={toast} />
+          <MatchesPanel resume={resume} toast={toast} />
+        </div>
       </main>
 
       {/* Toasts */}

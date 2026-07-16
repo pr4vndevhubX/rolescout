@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { MapPin, Building2, ExternalLink, Bookmark, XCircle, ChevronDown } from "lucide-react";
+import { MapPin, Building2, ExternalLink, Bookmark, XCircle, ChevronDown, Wand2, FileText, CheckCircle2 } from "lucide-react";
 import ScoreRing from "./ScoreRing";
 
 function Bar({ label, value, color }) {
@@ -17,10 +17,11 @@ function Bar({ label, value, color }) {
   );
 }
 
-export default function MatchCard({ match, onStatus }) {
+export default function MatchCard({ match, onStatus, onTailor, onCoverLetter }) {
   const [open, setOpen] = useState(false);
   const isSaved = match.status === "saved";
   const isDismissed = match.status === "dismissed";
+  const isApplied = match.status === "applied";
 
   return (
     <div className={`glass glass-hover p-5 ${isDismissed ? "opacity-50" : ""}`}>
@@ -38,6 +39,7 @@ export default function MatchCard({ match, onStatus }) {
             </div>
             {isSaved && <span className="chip shrink-0 bg-emerald-500/15 text-emerald-300 ring-1 ring-emerald-400/25">saved</span>}
             {isDismissed && <span className="chip shrink-0 bg-rose-500/15 text-rose-300 ring-1 ring-rose-400/25">dismissed</span>}
+            {isApplied && <span className="chip shrink-0 bg-sky-500/15 text-sky-300 ring-1 ring-sky-400/25">applied ✓</span>}
           </div>
 
           <div className="mt-3 grid grid-cols-3 gap-3">
@@ -79,7 +81,21 @@ export default function MatchCard({ match, onStatus }) {
       )}
 
       <div className="mt-4 flex flex-wrap items-center gap-2 border-t border-white/[0.06] pt-3">
+        <button className="btn-ghost !px-3 !py-1.5 text-xs !text-fuchsia-300 hover:!border-fuchsia-400/40"
+          onClick={() => onTailor(match)}>
+          <Wand2 size={14} /> Tailor
+        </button>
+        <button className="btn-ghost !px-3 !py-1.5 text-xs !text-sky-300 hover:!border-sky-400/40"
+          onClick={() => onCoverLetter(match)}>
+          <FileText size={14} /> Letter
+        </button>
         <div className="flex-1" />
+        {!isApplied && (
+          <button className="btn-ghost !px-3 !py-1.5 text-xs !text-sky-300 hover:!border-sky-400/40"
+            onClick={() => onStatus(match, "applied")}>
+            <CheckCircle2 size={14} /> Applied
+          </button>
+        )}
         {!isSaved && (
           <button className="btn-ghost !px-3 !py-1.5 text-xs !text-emerald-300 hover:!border-emerald-400/40"
             onClick={() => onStatus(match, "saved")}>

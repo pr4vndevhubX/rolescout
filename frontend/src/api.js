@@ -94,4 +94,37 @@ export const api = {
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ status }),
     }),
+
+  // Tailoring
+  tailorMatch: (matchId) => request(`/resumes/matches/${matchId}/tailor`, { method: "POST" }),
+  coverLetter: (matchId) => request(`/resumes/matches/${matchId}/cover-letter`, { method: "POST" }),
+
+  // Preferences (the assistant's standing instructions)
+  getPreferences: () => request("/preferences"),
+  savePreferences: (prefs) =>
+    request("/preferences", {
+      method: "PUT",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(prefs),
+    }),
+
+  // Assistant (LangGraph agent)
+  assistantChat: (message) =>
+    request("/assistant/chat", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ message }),
+    }),
+  assistantRun: () => request("/assistant/run", { method: "POST" }),
+  assistantRuns: (limit = 10) => request(`/assistant/runs?limit=${limit}`),
+
+  // Applications (prepared packages awaiting approval)
+  listApplications: (status) =>
+    request(`/applications${status ? `?status=${status}` : ""}`),
+  setApplicationStatus: (applicationId, status) =>
+    request(`/applications/${applicationId}`, {
+      method: "PATCH",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ status }),
+    }),
 };
