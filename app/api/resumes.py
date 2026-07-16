@@ -25,6 +25,11 @@ from app.services.matching.retrieval import get_shortlist
 from app.services.normalizer import normalize_resume
 from app.services.resume_parser import parse_resume_text, ParsingError
 from app.services.resume_text_builder import build_resume_summary_text
+from app.services.tailoring_service import (
+    TailoringError,
+    generate_cover_letter,
+    tailor_resume_for_job,
+)
 from app.services.text_extraction import extract_text, ExtractionError
 from app.ai.llm import LLMRouterError
 
@@ -360,8 +365,73 @@ def list_matches(
 
     return MatchesResponse(resume_id=resume_id, result_count=len(results), results=results)
 
+def _get_owned_match_context(db: Session, match_id: str, user: User):
+    """Match + its job + the owning (parsed) resume, with ownership enforced."""
+    match = get_match_by_id(db, match_id)
+    if not match:
+        raise HTTPException(status_code=404, detail="Match not found.")
+    resume = _get_owned_resume(db, match.resume_id, user)
+    if not resume.parsed_data:
+        raise HTTPException(status_code=400, detail="Resume must be parsed first.")
+    job = db.query(JobRecord).filter(JobRecord.job_id == match.job_id).first()
+    if not job:
+        raise HTTPException(status_code=404, detail="Job no longer exists.")
+    return match, job, resume
+
+
+@router.post("/matches/{match_id}/tailor")
+def tailor_match(
+    match_id: str,
+    user: User = Depends(get_current_user),
+    db: Session = Depends(get_db),
+):
+    """Truthful tailoring suggestions adapting this resume to this job's JD."""
+    match, job, resume = _get_owned_match_context(db, match_id, user)
+    parsed = ParsedResume(**resume.parsed_data)
+    try:
+        suggestions = tailor_resume_for_job(
+            resume_summary=build_resume_summary_text(parsed),
+            job_title=job.title,
+            company=job.company,
+            job_description=job.description or "",
+            missing_skills=match.missing_skills or [],
+            ats_missing_keywords=match.ats_missing_keywords or [],
+        )
+    except TailoringError as e:
+        raise HTTPException(status_code=422, detail=str(e))
+    except LLMRouterError as e:
+        raise HTTPException(status_code=502, detail=f"LLM unavailable: {e}")
+
+    return {"match_id": match_id, "job_id": job.job_id, "job_title": job.title, **suggestions}
+
+
+@router.post("/matches/{match_id}/cover-letter")
+def cover_letter_for_match(
+    match_id: str,
+    user: User = Depends(get_current_user),
+    db: Session = Depends(get_db),
+):
+    """Job-specific cover letter grounded strictly in the parsed resume."""
+    match, job, resume = _get_owned_match_context(db, match_id, user)
+    parsed = ParsedResume(**resume.parsed_data)
+    try:
+        letter = generate_cover_letter(
+            resume_summary=build_resume_summary_text(parsed),
+            candidate_name=parsed.full_name,
+            job_title=job.title,
+            company=job.company,
+            job_description=job.description or "",
+        )
+    except TailoringError as e:
+        raise HTTPException(status_code=422, detail=str(e))
+    except LLMRouterError as e:
+        raise HTTPException(status_code=502, detail=f"LLM unavailable: {e}")
+
+    return {"match_id": match_id, "job_id": job.job_id, "job_title": job.title, "cover_letter": letter}
+
+
 class MatchStatusUpdate(BaseModel):
-    status: str  # "saved" or "dismissed"
+    status: str  # "saved", "dismissed", or "applied"
 
 @router.patch("/matches/{match_id}/status")
 def set_match_status(
