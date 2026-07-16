@@ -1,4 +1,6 @@
-# AI Job Application Agent 🤖
+# rolescout 🦅
+
+> An agentic personal assistant that scouts roles for you, every day.
 
 An **agentic AI personal assistant** for your job hunt. Upload your resume once, tell it what roles you want ("Machine Learning Engineer", "GenAI Engineer"...), and it works for you every day:
 
@@ -59,7 +61,7 @@ The Tailor never fabricates. Its prompts enforce: use only facts present in the 
 ## Quick start
 
 ```bash
-git clone <repo-url> && cd AI-Job-Application-Agent
+git clone git@github.com:pr4vndevhubX/rolescout.git && cd rolescout
 
 # Backend
 python -m venv venv && source venv/bin/activate   # venv\Scripts\activate on Windows

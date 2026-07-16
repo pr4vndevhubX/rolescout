@@ -1,6 +1,6 @@
 # AI Job Agent — Frontend
 
-Dark glassmorphism dashboard for the AI Job Application Agent backend.
+Dark glassmorphism dashboard for the rolescout backend.
 Vite + React 18 + Tailwind CSS. Fully separate from the backend — all
 communication goes through `/api/*`, which the Vite dev server proxies to
 `http://127.0.0.1:8000` (see `vite.config.js`). No CORS setup needed.

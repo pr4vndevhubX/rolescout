@@ -38,7 +38,7 @@ except Exception:
 start_scheduler()                 # no-op unless JOB_SYNC_QUERIES is set in .env
 
 # --- App --------------------------------------------------------------------
-app = FastAPI(title="AI Job Application Agent", version="1.0.0")
+app = FastAPI(title="rolescout", version="1.0.0")
 
 register_middleware(app)          # rate limiting, request logging, error safety net
 

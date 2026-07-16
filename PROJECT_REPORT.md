@@ -1,4 +1,4 @@
-# AI Job Application Agent — Project Report
+# rolescout — Project Report
 
 ## What this project does
 
