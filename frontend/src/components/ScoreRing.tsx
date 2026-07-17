@@ -1,5 +1,5 @@
 // Animated circular score indicator (0..1 -> percentage ring)
-export default function ScoreRing({ value, size = 72, label }) {
+export default function ScoreRing({ value, size = 72, label }: { value: number; size?: number; label?: string }) {
   const pct = Math.round((value || 0) * 100);
   const r = (size - 10) / 2;
   const c = 2 * Math.PI * r;

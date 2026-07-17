@@ -1,9 +1,9 @@
 import { useEffect, useState } from "react";
 import { Settings2, Plus, X, Loader2, Save } from "lucide-react";
-import { api } from "../api";
+import { api, type ToastFn } from "../api";
 
-export default function PreferencesPanel({ toast }) {
-  const [prefs, setPrefs] = useState(null);
+export default function PreferencesPanel({ toast }: { toast: ToastFn }) {
+  const [prefs, setPrefs] = useState<any>(null);
   const [roleInput, setRoleInput] = useState("");
   const [saving, setSaving] = useState(false);
 
@@ -14,7 +14,7 @@ export default function PreferencesPanel({ toast }) {
   function addRole() {
     const role = roleInput.trim();
     if (!role || prefs.desired_roles.includes(role)) return;
-    setPrefs((p) => ({ ...p, desired_roles: [...p.desired_roles, role] }));
+    setPrefs((p: any) => ({ ...p, desired_roles: [...p.desired_roles, role] }));
     setRoleInput("");
   }
 
@@ -61,10 +61,10 @@ export default function PreferencesPanel({ toast }) {
       </div>
       {prefs.desired_roles.length > 0 && (
         <div className="mt-2 flex flex-wrap gap-1.5">
-          {prefs.desired_roles.map((r) => (
+          {prefs.desired_roles.map((r: string) => (
             <span key={r} className="chip flex items-center gap-1 bg-indigo-500/15 text-indigo-200 ring-1 ring-indigo-400/25">
               {r}
-              <button onClick={() => setPrefs((p) => ({ ...p, desired_roles: p.desired_roles.filter((x) => x !== r) }))}
+              <button onClick={() => setPrefs((p: any) => ({ ...p, desired_roles: p.desired_roles.filter((x: string) => x !== r) }))}
                 className="text-indigo-300/60 hover:text-white"><X size={11} /></button>
             </span>
           ))}
@@ -75,12 +75,12 @@ export default function PreferencesPanel({ toast }) {
         <div>
           <label className="text-[11px] font-medium uppercase tracking-wide text-slate-500">Country</label>
           <input className="input-dark mt-1" value={prefs.country || ""}
-            onChange={(e) => setPrefs((p) => ({ ...p, country: e.target.value }))} placeholder="in" />
+            onChange={(e) => setPrefs((p: any) => ({ ...p, country: e.target.value }))} placeholder="in" />
         </div>
         <div>
           <label className="text-[11px] font-medium uppercase tracking-wide text-slate-500">Min salary</label>
           <input className="input-dark mt-1" type="number" value={prefs.min_salary ?? ""}
-            onChange={(e) => setPrefs((p) => ({ ...p, min_salary: e.target.value }))} placeholder="optional" />
+            onChange={(e) => setPrefs((p: any) => ({ ...p, min_salary: e.target.value }))} placeholder="optional" />
         </div>
       </div>
 
@@ -89,19 +89,19 @@ export default function PreferencesPanel({ toast }) {
           Strong-fit threshold <span className="text-slate-300">{Math.round(prefs.min_match_score * 100)}%</span>
         </label>
         <input type="range" min="0.3" max="0.8" step="0.05" value={prefs.min_match_score}
-          onChange={(e) => setPrefs((p) => ({ ...p, min_match_score: e.target.value }))}
+          onChange={(e) => setPrefs((p: any) => ({ ...p, min_match_score: e.target.value }))}
           className="mt-1 w-full accent-indigo-400" />
       </div>
 
       <div className="mt-3 space-y-2 text-xs text-slate-400">
         <label className="flex cursor-pointer items-center gap-2">
           <input type="checkbox" checked={prefs.auto_tailor} className="accent-indigo-400"
-            onChange={(e) => setPrefs((p) => ({ ...p, auto_tailor: e.target.checked }))} />
+            onChange={(e) => setPrefs((p: any) => ({ ...p, auto_tailor: e.target.checked }))} />
           Auto-tailor my resume for near-miss jobs
         </label>
         <label className="flex cursor-pointer items-center gap-2">
           <input type="checkbox" checked={prefs.daily_digest_enabled} className="accent-indigo-400"
-            onChange={(e) => setPrefs((p) => ({ ...p, daily_digest_enabled: e.target.checked }))} />
+            onChange={(e) => setPrefs((p: any) => ({ ...p, daily_digest_enabled: e.target.checked }))} />
           Email me a daily digest of new matches
         </label>
       </div>

@@ -1,6 +1,6 @@
 import { useEffect, useState, useCallback } from "react";
 import { BrainCircuit, CheckCircle2, AlertCircle, Info, X, LogOut, Loader2 } from "lucide-react";
-import { api, auth, setUnauthorizedHandler } from "./api";
+import { api, auth, setUnauthorizedHandler, type Resume, type ToastFn } from "./api";
 import AuthPage from "./components/AuthPage";
 import UploadPanel from "./components/UploadPanel";
 import JobsPanel from "./components/JobsPanel";
@@ -10,14 +10,16 @@ import AssistantPanel from "./components/AssistantPanel";
 
 let toastId = 0;
 
-export default function App() {
-  const [user, setUser] = useState(null);
-  const [authChecking, setAuthChecking] = useState(true);
-  const [resume, setResume] = useState(null);
-  const [health, setHealth] = useState(null);
-  const [toasts, setToasts] = useState([]);
+type Toast = { id: number; message: string; type: "info" | "success" | "error" };
 
-  const toast = useCallback((message, type = "info") => {
+export default function App() {
+  const [user, setUser] = useState<{ email: string } | null>(null);
+  const [authChecking, setAuthChecking] = useState(true);
+  const [resume, setResume] = useState<Resume | null>(null);
+  const [health, setHealth] = useState<{ status: string } | null>(null);
+  const [toasts, setToasts] = useState<Toast[]>([]);
+
+  const toast = useCallback<ToastFn>((message, type = "info") => {
     const id = ++toastId;
     setToasts((t) => [...t, { id, message, type }]);
     setTimeout(() => setToasts((t) => t.filter((x) => x.id !== id)), 4500);
@@ -56,7 +58,7 @@ export default function App() {
     return () => clearInterval(interval);
   }, []);
 
-  async function handleAuthed(u) {
+  async function handleAuthed(u: { email: string }) {
     setUser(u);
     try {
       const r = await api.listResumes();

@@ -1,10 +1,10 @@
 import { useEffect, useState } from "react";
 import { Target, Loader2, Sparkles, Copy } from "lucide-react";
-import { api } from "../api";
+import { api, type Resume, type ToastFn } from "../api";
 import MatchCard from "./MatchCard";
 import Modal from "./Modal";
 
-function TailoringView({ data }) {
+function TailoringView({ data }: { data: any }) {
   return (
     <div className="space-y-4 text-sm text-slate-300">
       {data.tailored_summary && (
@@ -17,7 +17,7 @@ function TailoringView({ data }) {
         <section>
           <h4 className="mb-1 text-xs font-bold uppercase tracking-wide text-indigo-300">Bullet rewrites</h4>
           <div className="space-y-2">
-            {data.bullet_rewrites.map((b, i) => (
+            {data.bullet_rewrites.map((b: any, i: number) => (
               <div key={i} className="rounded-xl border border-white/[0.06] bg-slate-950/40 p-3 text-xs">
                 <p className="text-slate-500 line-through">{b.original}</p>
                 <p className="mt-1 text-emerald-300">{b.rewritten}</p>
@@ -29,7 +29,7 @@ function TailoringView({ data }) {
       {data.surfaceable_skills?.length > 0 && (
         <section>
           <h4 className="mb-1 text-xs font-bold uppercase tracking-wide text-indigo-300">Skills you can truthfully surface</h4>
-          {data.surfaceable_skills.map((s, i) => (
+          {data.surfaceable_skills.map((s: any, i: number) => (
             <p key={i} className="text-xs"><span className="font-semibold text-white">{s.skill}</span>
               <span className="text-slate-500"> — {s.evidence}</span></p>
           ))}
@@ -39,7 +39,7 @@ function TailoringView({ data }) {
         <section>
           <h4 className="mb-1 text-xs font-bold uppercase tracking-wide text-indigo-300">ATS keywords to weave in</h4>
           <div className="flex flex-wrap gap-1.5">
-            {data.ats_keywords_to_add.map((k) => (
+            {data.ats_keywords_to_add.map((k: string) => (
               <span key={k} className="chip bg-sky-500/12 text-sky-300 ring-1 ring-sky-400/20">{k}</span>
             ))}
           </div>
@@ -48,7 +48,7 @@ function TailoringView({ data }) {
       {data.honest_gaps?.length > 0 && (
         <section>
           <h4 className="mb-1 text-xs font-bold uppercase tracking-wide text-rose-300">Honest gaps (don't fake these)</h4>
-          {data.honest_gaps.map((g, i) => (
+          {data.honest_gaps.map((g: any, i: number) => (
             <p key={i} className="text-xs"><span className="font-semibold text-white">{g.skill}</span>
               <span className="text-slate-500"> — {g.suggestion}</span></p>
           ))}
@@ -65,13 +65,13 @@ const PHASES = [
   "Computing ATS keyword scores...",
 ];
 
-export default function MatchesPanel({ resume, toast }) {
-  const [matches, setMatches] = useState([]);
+export default function MatchesPanel({ resume, toast }: { resume: Resume | null; toast: ToastFn }) {
+  const [matches, setMatches] = useState<any[]>([]);
   const [generating, setGenerating] = useState(false);
   const [phaseIdx, setPhaseIdx] = useState(0);
   const [filter, setFilter] = useState("");
   const [locationFilter, setLocationFilter] = useState("");
-  const [modal, setModal] = useState(null); // {kind: "tailor"|"letter", match, data?, loading}
+  const [modal, setModal] = useState<any>(null); // {kind: "tailor"|"letter", match, data?, loading}
 
   // Restore previously generated matches when a resume appears (e.g. after login)
   useEffect(() => {
@@ -96,7 +96,7 @@ export default function MatchesPanel({ resume, toast }) {
     }
   }
 
-  async function refresh(status) {
+  async function refresh(status: string) {
     if (!resume) return;
     setFilter(status);
     try {
@@ -107,7 +107,7 @@ export default function MatchesPanel({ resume, toast }) {
     }
   }
 
-  async function setStatus(match, status) {
+  async function setStatus(match: any, status: string) {
     try {
       await api.setMatchStatus(match.match_id, status);
       setMatches((ms) => ms.map((m) => (m.match_id === match.match_id ? { ...m, status } : m)));
@@ -117,7 +117,7 @@ export default function MatchesPanel({ resume, toast }) {
     }
   }
 
-  async function openTailor(match) {
+  async function openTailor(match: any) {
     setModal({ kind: "tailor", match, loading: true });
     try {
       const data = await api.tailorMatch(match.match_id);
@@ -128,7 +128,7 @@ export default function MatchesPanel({ resume, toast }) {
     }
   }
 
-  async function openCoverLetter(match) {
+  async function openCoverLetter(match: any) {
     setModal({ kind: "letter", match, loading: true });
     try {
       const data = await api.coverLetter(match.match_id);

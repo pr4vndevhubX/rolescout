@@ -63,14 +63,13 @@ The Tailor never fabricates. Its prompts enforce: use only facts present in the 
 ```bash
 git clone git@github.com:pr4vndevhubX/rolescout.git && cd rolescout
 
-# Backend
-python -m venv venv && source venv/bin/activate   # venv\Scripts\activate on Windows
-pip install -r requirements.txt
+# Backend — uv (https://docs.astral.sh/uv/) creates .venv and installs everything
+uv sync
 cp .env.example .env                              # fill in: 1 LLM key + Neon DATABASE_URL + JWT_SECRET
-uvicorn app.main:app --reload                     # tables/pgvector/indexes auto-created
+uv run uvicorn app.main:app --reload              # tables/pgvector/indexes auto-created
 
-# Frontend (second terminal)
-cd frontend && npm install && npm run dev         # http://localhost:5173
+# Frontend (second terminal) — TypeScript + Vite, managed with bun (https://bun.sh)
+cd frontend && bun install && bun run dev         # http://localhost:5173
 ```
 
 Minimum `.env` (everything else optional): `DATABASE_URL` ([neon.tech](https://neon.tech) free tier), `JWT_SECRET`, one LLM key (e.g. `GROQ_API_KEY`). Add SMTP settings for real email digests and `ASSISTANT_ENABLED=true` for the daily cron — see `.env.example` for the full annotated list.

@@ -4,7 +4,8 @@
 # Uploaded resumes — real user PII, must never be committed
 storage/
 
-# Python virtual environment
+# Python virtual environment (uv-managed)
+.venv/
 venv/
 
 # Python cache

@@ -1,16 +1,17 @@
-# AI Job Agent — Frontend
+# rolescout — Frontend
 
 Dark glassmorphism dashboard for the rolescout backend.
-Vite + React 18 + Tailwind CSS. Fully separate from the backend — all
-communication goes through `/api/*`, which the Vite dev server proxies to
-`http://127.0.0.1:8000` (see `vite.config.js`). No CORS setup needed.
+Vite + React 18 + TypeScript + Tailwind CSS, managed with [bun](https://bun.sh).
+Fully separate from the backend — all communication goes through `/api/*`,
+which the Vite dev server proxies to `http://127.0.0.1:8000`
+(see `vite.config.ts`). No CORS setup needed.
 
 ## Run
 
 ```bash
 cd frontend
-npm install
-npm run dev        # http://localhost:5173  (backend must be running on :8000)
+bun install
+bun run dev        # http://localhost:5173  (backend must be running on :8000)
 ```
 
 ## What it does
@@ -23,7 +24,7 @@ npm run dev        # http://localhost:5173  (backend must be running on :8000)
 ## Build for production
 
 ```bash
-npm run build      # outputs to dist/
+bun run build      # typechecks, then outputs to dist/
 ```
 
 When deploying, serve `dist/` behind the same origin as the API or set up a

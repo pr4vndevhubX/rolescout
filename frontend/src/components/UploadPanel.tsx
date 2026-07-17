@@ -1,6 +1,6 @@
 import { useRef, useState } from "react";
-import { CloudUpload, FileText, Sparkles, Cpu, CheckCircle2, Loader2, AlertCircle } from "lucide-react";
-import { api } from "../api";
+import { CloudUpload, FileText, Sparkles, Cpu, CheckCircle2, Loader2, AlertCircle, type LucideIcon } from "lucide-react";
+import { api, type Resume, type ToastFn } from "../api";
 
 const STEPS = [
   { key: "upload", label: "Upload", icon: CloudUpload },
@@ -9,23 +9,25 @@ const STEPS = [
   { key: "embed", label: "Embed", icon: Cpu },
 ];
 
-function StepDot({ state, Icon }) {
+function StepDot({ state, Icon }: { state?: string; Icon: LucideIcon }) {
   if (state === "done") return <CheckCircle2 size={22} className="animate-bounce-in text-emerald-400" />;
   if (state === "running") return <Loader2 size={22} className="animate-spin text-indigo-400" />;
   if (state === "error") return <AlertCircle size={22} className="text-rose-400" />;
   return <Icon size={22} className="text-slate-600" />;
 }
 
-export default function UploadPanel({ resume, setResume, toast }) {
-  const inputRef = useRef(null);
+export default function UploadPanel({ resume, setResume, toast }: {
+  resume: Resume | null; setResume: (r: Resume) => void; toast: ToastFn;
+}) {
+  const inputRef = useRef<HTMLInputElement>(null);
   const [dragOver, setDragOver] = useState(false);
-  const [steps, setSteps] = useState({});
+  const [steps, setSteps] = useState<Record<string, string>>({});
   const [busy, setBusy] = useState(false);
-  const [parsedPreview, setParsedPreview] = useState(null);
+  const [parsedPreview, setParsedPreview] = useState<any>(null);
 
-  const setStep = (key, state) => setSteps((s) => ({ ...s, [key]: state }));
+  const setStep = (key: string, state: string) => setSteps((s) => ({ ...s, [key]: state }));
 
-  async function runPipeline(file) {
+  async function runPipeline(file: File) {
     setBusy(true);
     setParsedPreview(null);
     setSteps({ upload: "running" });
@@ -60,7 +62,7 @@ export default function UploadPanel({ resume, setResume, toast }) {
     }
   }
 
-  function onFile(file) {
+  function onFile(file: File | null | undefined) {
     if (!file) return;
     if (!/\.(pdf|docx)$/i.test(file.name)) {
       toast("Only PDF and DOCX files are supported.", "error");
@@ -97,7 +99,7 @@ export default function UploadPanel({ resume, setResume, toast }) {
         </p>
         <p className="mt-1 text-xs text-slate-500">PDF or DOCX · max 5 MB</p>
         <input ref={inputRef} type="file" accept=".pdf,.docx" className="hidden"
-          onChange={(e) => onFile(e.target.files[0])} />
+          onChange={(e) => onFile(e.target.files?.[0])} />
       </div>
 
       {/* Pipeline stepper */}
@@ -131,7 +133,7 @@ export default function UploadPanel({ resume, setResume, toast }) {
               .filter(Boolean).join(" · ")}
           </p>
           <div className="mt-3 flex flex-wrap gap-1.5">
-            {(p.skills || []).slice(0, 12).map((s) => (
+            {(p.skills || []).slice(0, 12).map((s: string) => (
               <span key={s} className="chip bg-white/[0.06] text-slate-300">{s}</span>
             ))}
             {(p.skills || []).length > 12 && (

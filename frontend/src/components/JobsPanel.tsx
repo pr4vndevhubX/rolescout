@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Briefcase, Loader2, CheckCircle2 } from "lucide-react";
-import { api } from "../api";
+import { api, type ToastFn } from "../api";
 
 const COUNTRIES = [
   { code: "in", label: "India" },
@@ -11,13 +11,13 @@ const COUNTRIES = [
   { code: "au", label: "Australia" },
 ];
 
-export default function JobsPanel({ toast }) {
+export default function JobsPanel({ toast }: { toast: ToastFn }) {
   const [query, setQuery] = useState("");
   const [country, setCountry] = useState("in");
   const [location, setLocation] = useState("");
   const [busy, setBusy] = useState(false);
   const [phase, setPhase] = useState("");
-  const [result, setResult] = useState(null);
+  const [result, setResult] = useState<{ ingested: number; indexed: number } | null>(null);
 
   async function fetchAndIndex() {
     if (!query.trim()) return toast("Enter a job search query first.", "error");

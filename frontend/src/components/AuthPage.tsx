@@ -1,15 +1,15 @@
-import { useState } from "react";
+import { useState, type FormEvent } from "react";
 import { BrainCircuit, Mail, Lock, Loader2, LogIn, UserPlus } from "lucide-react";
 import { api, auth } from "../api";
 
-export default function AuthPage({ onAuthed }) {
-  const [mode, setMode] = useState("login"); // "login" | "signup"
+export default function AuthPage({ onAuthed }: { onAuthed: (u: { email: string }) => void }) {
+  const [mode, setMode] = useState<"login" | "signup">("login");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState("");
 
-  async function submit(e) {
+  async function submit(e: FormEvent) {
     e.preventDefault();
     if (!email || !password) return setError("Enter your email and password.");
     setBusy(true);
@@ -46,7 +46,7 @@ export default function AuthPage({ onAuthed }) {
         <div className="glass animate-fade-up p-7">
           {/* Mode switch */}
           <div className="mb-6 flex gap-1 rounded-xl border border-white/10 bg-slate-900/50 p-1">
-            {[["login", "Log in"], ["signup", "Create account"]].map(([m, label]) => (
+            {([["login", "Log in"], ["signup", "Create account"]] as const).map(([m, label]) => (
               <button key={m} type="button"
                 onClick={() => { setMode(m); setError(""); }}
                 className={`flex-1 rounded-lg px-3 py-2 text-sm font-semibold transition ${

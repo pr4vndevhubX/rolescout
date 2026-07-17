@@ -1,6 +1,9 @@
+import type { ReactNode } from "react";
 import { X } from "lucide-react";
 
-export default function Modal({ title, subtitle, onClose, children }) {
+export default function Modal({ title, subtitle, onClose, children }: {
+  title: string; subtitle?: string; onClose: () => void; children: ReactNode;
+}) {
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
       <div className="absolute inset-0 bg-slate-950/80 backdrop-blur-sm" onClick={onClose} />

@@ -1,8 +1,8 @@
 import { useEffect, useRef, useState } from "react";
 import { Bot, Send, Loader2, PlayCircle, ChevronDown, Wrench } from "lucide-react";
-import { api } from "../api";
+import { api, type ToastFn } from "../api";
 
-function ActionRow({ action }) {
+function ActionRow({ action }: { action: any }) {
   return (
     <div className="flex items-start gap-2 text-[11px] leading-relaxed">
       <Wrench size={11} className="mt-0.5 shrink-0 text-slate-600" />
@@ -14,14 +14,14 @@ function ActionRow({ action }) {
   );
 }
 
-export default function AssistantPanel({ toast }) {
-  const [messages, setMessages] = useState([]);   // {role, text, actions?}
+export default function AssistantPanel({ toast }: { toast: ToastFn }) {
+  const [messages, setMessages] = useState<{ role: string; text: string; actions?: any[] }[]>([]);
   const [input, setInput] = useState("");
   const [busy, setBusy] = useState(false);
   const [running, setRunning] = useState(false);
-  const [runs, setRuns] = useState([]);
+  const [runs, setRuns] = useState<any[]>([]);
   const [showActivity, setShowActivity] = useState(false);
-  const scrollRef = useRef(null);
+  const scrollRef = useRef<HTMLDivElement>(null);
 
   const refreshRuns = () => api.assistantRuns(8).then((r) => setRuns(r.runs)).catch(() => {});
   useEffect(() => { refreshRuns(); }, []);
@@ -87,7 +87,7 @@ export default function AssistantPanel({ toast }) {
                 ? "bg-indigo-500/20 text-indigo-100"
                 : "border border-white/[0.06] bg-slate-950/40 text-slate-300"}`}>
               <p className="whitespace-pre-wrap">{m.text}</p>
-              {m.actions?.length > 0 && (
+              {m.actions && m.actions.length > 0 && (
                 <div className="mt-2 space-y-1 border-t border-white/[0.06] pt-2">
                   {m.actions.map((a, j) => <ActionRow key={j} action={a} />)}
                 </div>
@@ -132,7 +132,7 @@ export default function AssistantPanel({ toast }) {
               </div>
               {r.summary && <p className="mt-1 text-[11px] text-slate-400">{r.summary}</p>}
               {r.actions?.length > 0 && (
-                <div className="mt-1.5 space-y-1">{r.actions.map((a, j) => <ActionRow key={j} action={a} />)}</div>
+                <div className="mt-1.5 space-y-1">{r.actions.map((a: any, j: number) => <ActionRow key={j} action={a} />)}</div>
               )}
             </div>
           ))}

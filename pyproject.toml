@@ -1,0 +1,39 @@
+[project]
+name = "rolescout"
+version = "1.0.0"
+description = "Agentic personal assistant that scouts roles for you, every day"
+requires-python = ">=3.12"
+dependencies = [
+    "fastapi",
+    "uvicorn[standard]",
+    "python-multipart",
+    "pydantic",
+    "pdfplumber",
+    "python-docx",
+    "sqlalchemy",
+    "openai",
+    "python-dotenv",
+    "sentence-transformers",
+    "httpx",
+    "psycopg2-binary",
+    "alembic",
+    "pgvector",
+    "apscheduler>=3.10,<4.0",
+    "pyjwt",
+    "email-validator",
+    # Agentic AI (LangGraph orchestrator + LangChain tooling)
+    "langchain",
+    "langgraph",
+    "langchain-openai",
+]
+
+[project.optional-dependencies]
+# OCR fallback for scanned/image PDFs — also needs the Tesseract engine binary
+# (https://github.com/tesseract-ocr/tesseract)
+ocr = ["pypdfium2", "pytesseract"]
+
+[dependency-groups]
+dev = ["pytest"]
+
+[tool.uv]
+package = false

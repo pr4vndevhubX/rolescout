@@ -2,7 +2,7 @@ import { useState } from "react";
 import { MapPin, Building2, ExternalLink, Bookmark, XCircle, ChevronDown, Wand2, FileText, CheckCircle2 } from "lucide-react";
 import ScoreRing from "./ScoreRing";
 
-function Bar({ label, value, color }) {
+function Bar({ label, value, color }: { label: string; value: number; color: string }) {
   return (
     <div>
       <div className="mb-1 flex justify-between text-[11px]">
@@ -17,7 +17,12 @@ function Bar({ label, value, color }) {
   );
 }
 
-export default function MatchCard({ match, onStatus, onTailor, onCoverLetter }) {
+export default function MatchCard({ match, onStatus, onTailor, onCoverLetter }: {
+  match: any;
+  onStatus: (match: any, status: string) => void;
+  onTailor: (match: any) => void;
+  onCoverLetter: (match: any) => void;
+}) {
   const [open, setOpen] = useState(false);
   const isSaved = match.status === "saved";
   const isDismissed = match.status === "dismissed";
@@ -65,10 +70,10 @@ export default function MatchCard({ match, onStatus, onTailor, onCoverLetter }) 
       {open && (
         <div className="mt-3 animate-fade-up space-y-2">
           <div className="flex flex-wrap gap-1.5">
-            {match.matched_skills.map((s) => (
+            {match.matched_skills.map((s: string) => (
               <span key={s} className="chip bg-emerald-500/12 text-emerald-300 ring-1 ring-emerald-400/20">{s}</span>
             ))}
-            {match.missing_skills.map((s) => (
+            {match.missing_skills.map((s: string) => (
               <span key={s} className="chip bg-rose-500/10 text-rose-300/90 ring-1 ring-rose-400/20">{s}</span>
             ))}
           </div>
