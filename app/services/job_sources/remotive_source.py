@@ -22,7 +22,7 @@ class RemotiveSource(JobSource):
         limit: int = 20,
     ) -> list[dict]:
         try:
-            response = httpx.get(API_URL, params={"search": query, "limit": limit}, timeout=20)
+            response = httpx.get(API_URL, params={"search": query, "limit": limit}, timeout=20, verify=False)
             response.raise_for_status()
             raw_jobs = response.json().get("jobs", [])
         except Exception as e:

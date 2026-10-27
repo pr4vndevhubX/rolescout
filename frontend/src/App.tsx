@@ -7,6 +7,7 @@ import JobsPanel from "./components/JobsPanel";
 import MatchesPanel from "./components/MatchesPanel";
 import PreferencesPanel from "./components/PreferencesPanel";
 import AssistantPanel from "./components/AssistantPanel";
+import ApplicationsPanel from "./components/ApplicationsPanel";
 
 let toastId = 0;
 
@@ -124,6 +125,7 @@ export default function App() {
         </div>
         <div className="space-y-5">
           <AssistantPanel toast={toast} />
+          <ApplicationsPanel toast={toast} />
           <MatchesPanel resume={resume} toast={toast} />
         </div>
       </main>
